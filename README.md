@@ -27,3 +27,4 @@ python main.py --audio path/to/file.wav --ckpt path/to/ckpt.pth
 # TO DO
 - Implement VAD that works
 - Replace boundary conflict heuristics with something more fancy
+- Mapping CTC phonemes to phoneme boundaries could be done through a dynamic programming approach, I need to find a proper formulation, heuristics will do for now
