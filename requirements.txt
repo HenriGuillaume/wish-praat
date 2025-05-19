@@ -1,0 +1,31 @@
+# Core scientific stack
+numpy
+scipy
+librosa
+
+# PyTorch + Torchaudio
+torch
+torchaudio
+
+# HuggingFace Transformers for Wav2Vec2 and WhisperX
+transformers
+sentencepiece  # Required by some Transformer models
+
+# WhisperX and its dependencies
+whisperx
+faster-whisper  # Often required if using WhisperX with fast decoding
+
+# TextGrid parsing
+textgrid
+
+# Typing (standard in Python 3.7+ but included for compatibility)
+typing-extensions
+
+# Optional: logging is in stdlib, dataclasses is native in 3.7+ but backport for older Python
+dataclasses; python_version < "3.7"
+
+# If using GPU with WhisperX, include these:
+# (Uncomment if needed)
+# torch==2.1.0+cu118
+# torchaudio==2.1.0+cu118
+# -f https://download.pytorch.org/whl/torch_stable.html
