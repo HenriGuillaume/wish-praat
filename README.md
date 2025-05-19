@@ -6,6 +6,13 @@ alignment using boundaires found by the first model, as well as simple heuristic
 If you wish to modify the code, do not hesitate to contact me, I enjoy it when things work.
 
 # INSTALL
+## CLONE REPO
+```
+git clone https://github.com/HenriGuillaume/phoneme_aligner.git
+cd phoneme_aligner
+```
+
+## CREATE ENVIRONMENT
 ```
 conda create -n yourenvname python=3.10
 conda activate yourvenvname
