@@ -38,12 +38,13 @@ def ctc_kreuk_pipeline(
         audio_pth: str,
         ckpt_pth: str
         ):
-    audio_data = processing.load_audio(audio_path)
+    audio_data = processing.load_audio(audio_pth)
     # use whole segment for CTC, no VAD is required
     speech_seg = [(0, len(audio_data.signal) / audio_data.fs, 1)]
     # inference
     ctc_seg = models.global_ctc_phoneme_alignment(audio_data.signal, audio_data.fs, speech_seg)
-    kreuk_seg = models.kreuk_phoneme_preds(audio_data.signal, audio_data.fs, ckpt_pth)
+    kreuk_preds = models.kreuk_phoneme_preds(audio_data.signal, audio_data.fs, ckpt_pth)
+    kreuk_seg = models.kreuk_preds_to_seg(kreuk_preds)
     # adjusting boundaries
     phon_seg = models.ctc_kreuk_heuristic_match(ctc_seg, kreuk_seg)
     # tweaks
