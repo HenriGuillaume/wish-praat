@@ -4,7 +4,6 @@ import torch.nn as nn
 import numpy as np
 import time
 from scipy.signal import find_peaks
-import wandb
 from tqdm import tqdm
 
 
