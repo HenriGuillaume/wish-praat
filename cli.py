@@ -153,6 +153,7 @@ def ctc_kreuk_pipeline(
         audio_pth: str,
         ckpt_pth: str,
         out_pth: str,
+        lang: str,
         voice_detection = True
         ):
     audio_data = processing.load_audio(audio_pth)
@@ -162,9 +163,11 @@ def ctc_kreuk_pipeline(
     else:
         active_seg = whole_speech_seg
     # inference
+    #conv.seg_to_textgrid(active_seg, "../active.TextGrid")
     print('CTC...')
-    ctc_seg = models.global_ctc_phoneme_alignment(audio_data.signal, audio_data.fs, active_seg)
-    conv.seg_to_textgrid(ctc_seg, './ctc.TextGrid')
+    ctc_seg = models.global_ctc_phoneme_alignment(audio_data.signal, audio_data.fs, 
+                                                  active_seg, lang)
+    #conv.seg_to_textgrid(ctc_seg, './ctc.TextGrid')
     # run phoneme boundary detection on active segments
     print('Refinement')
     phon_seg = models.kreuk_ctc_refinement(audio_data.signal, audio_data.fs,
@@ -187,8 +190,9 @@ def ctc_kreuk_pipeline(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run CTC-Kreuk phoneme alignment pipeline.")
     parser.add_argument("--audio", required=True, help="Path to input audio file.")
+    parser.add_argument("--lang", required=True, help="Path to input audio file.")
     parser.add_argument("--ckpt", required=True, help="Path to Kreuk model checkpoint.")
     parser.add_argument("--out", required=True, help="Path to output TextGrid.")
     args = parser.parse_args()
 
-    ctc_kreuk_pipeline(args.audio, args.ckpt, args.out)
+    ctc_kreuk_pipeline(args.audio, args.ckpt, args.out, args.lang)

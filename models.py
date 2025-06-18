@@ -18,6 +18,12 @@ CONSONANTS = 'bdfgklmnɲŋpʁsʃtvzʒjwɥ'
 LONG_CONSONANTS = 'fmnsʃvzʒ'
 SHORT_CONSONANTS = 'bdgkpt'
 
+CTC_MODELS = {
+    'fr':"bofenghuang/phonemizer-wav2vec2-ctc-french",
+    'en':"speechbrain/asr-wav2vec2-commonvoice-en",
+    'nl':"Clementapa/wav2vec2-base-960h-phoneme-reco-dutch",
+    'nl2':"GroNLP/wav2vec2-dutch-large-ft-cgn"
+}
 
 # === Conversion ===
 
@@ -147,9 +153,10 @@ def global_phonemizer_transcript(
     signal: np.ndarray,
     fs: int,
     segment_list: List[Tuple[float, float, Any]],
-    model_name: str = "bofenghuang/phonemizer-wav2vec2-ctc-french"
+    model_tag: str = "fr"
 ) -> List[str]:
     """Phoneme transcription for each segment (no alignment)"""
+    model_name = CTC_MODELS[model_tag]
     processor = Wav2Vec2Processor.from_pretrained(
             model_name
     )
@@ -171,9 +178,10 @@ def global_ctc_phoneme_alignment(
     signal: np.ndarray,
     fs: int,
     segment_list: List[Tuple[float, float, Any]],
-    model_name: str = "bofenghuang/phonemizer-wav2vec2-ctc-french"
+    model_tag: str = "fr"
 ) -> List[Tuple[float, float, str]]:
     """Frame-level phoneme alignment for each segment"""
+    model_name = CTC_MODELS[model_tag]
     processor = Wav2Vec2Processor.from_pretrained(model_name)
     model = Wav2Vec2ForCTC.from_pretrained(model_name)
 
@@ -191,9 +199,9 @@ def global_ctc_phoneme_alignment(
 
 
 
-
 def global_VAD(
-        wav_path: str
+        wav_path: str,
+        threshold: float = 0.05
 ) -> List[Tuple[float, float, int]]:
     """Global voice-activity detection using Silero VAD"""
     model, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='silero_vad')
@@ -203,6 +211,7 @@ def global_VAD(
     speech_timestamps = get_speech_timestamps(
       wav,
       model,
+      threshold,
       return_seconds=True,  # Return speech timestamps in seconds (default is samples)
     ) 
     return [(s['start'], s['end'], 'True') for s in speech_timestamps]
